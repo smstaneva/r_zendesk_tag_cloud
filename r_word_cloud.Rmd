@@ -53,11 +53,18 @@ library(renv)
 renv::init()
 ```
 
+Activate the environment:
 ```{r}
-status_info <- renv::status()
-installed_packages <- status_info$packages$status == "installed"
-print(status_info$packages$package[installed_packages])
+renv::activate()
 ```
+
+
+```{r}
+installed_packages <- installed.packages()
+print(installed_packages)
+```
+
+
 
 
 
