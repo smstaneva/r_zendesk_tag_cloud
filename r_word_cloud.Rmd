@@ -18,24 +18,8 @@ The preview shows you a rendered HTML copy of the contents of the editor. Conseq
 
 * [LDA Model](#fifth-bullet)
 
-List all environments:
-```{r}
-ls()
-```
-Create new environment named 'test':
-```{r}
-test <- new.env() 
-```
 
-Check if the new environment got created:
-```{r}
-ls()
-```
-Register the new environment:
-```{r}
-attach(test)
-```
-
+Install package management system 'renv' to ensure packages are installed in the project-specific environment:
 ```{r}
 install.packages("renv")
 ```
@@ -45,25 +29,19 @@ Set your working directory to the project folder.
 setwd("/home/smsta/Desktop/r_zendesk_tag_cloud")
 ```
 
+Activate 'renv' in the project:
 ```{r}
+# Load the renv library
 library(renv)
-```
 
-```{r}
+# Initialize renv in the project
 renv::init()
 ```
 
-Activate the environment:
+Install packages in the project-specific environment:
 ```{r}
-renv::activate()
+renv::install("ggplot2")
 ```
-
-
-```{r}
-installed_packages <- installed.packages()
-print(installed_packages)
-```
-
 
 
 
