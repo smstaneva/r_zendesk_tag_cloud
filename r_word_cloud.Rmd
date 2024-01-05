@@ -18,15 +18,14 @@ The preview shows you a rendered HTML copy of the contents of the editor. Conseq
 
 * [LDA Model](#fifth-bullet)
 
+Set your working directory to the project folder.
+```{r}
+setwd("/home/smsta/Desktop/r_zendesk_tag_cloud")
+```
 
 Install package management system 'renv' to ensure packages are installed in the project-specific environment:
 ```{r}
 install.packages("renv")
-```
-
-Set your working directory to the project folder.
-```{r}
-setwd("/home/smsta/Desktop/r_zendesk_tag_cloud")
 ```
 
 Activate 'renv' in the project:
@@ -43,6 +42,18 @@ Install packages in the project-specific environment:
 renv::install("ggplot2")
 ```
 
+# <font color='#31708f'>Preprocessing</font>
+
+Display the path of current directory:
+```{r}
+getwd()
+```
+
+```{r}
+#Make sure code returns a list of files. List all json files in newman folder, sorted in ascending order
+file_list <- list.files(path = "/home/smsta/Desktop/zendesk_tag_cloud/newman", pattern = "*.json")
+print(file_list)
+```
 
 
 
