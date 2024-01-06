@@ -55,6 +55,11 @@ file_list <- list.files(path = "/home/smsta/Desktop/zendesk_tag_cloud/newman", p
 print(file_list)
 ```
 
+Install and load the jsonlite package:
+```{r}
+renv::install("jsonlite")
+library(jsonlite)
+```
 
 
 
