@@ -18,14 +18,14 @@ The preview shows you a rendered HTML copy of the contents of the editor. Conseq
 
 * [LDA Model](#fifth-bullet)
 
-Set your working directory to the project folder.
-```{r}
-setwd("/home/smsta/Desktop/r_zendesk_tag_cloud")
-```
-
 Install package management system 'renv' to ensure packages are installed in the project-specific environment:
 ```{r}
 install.packages("renv")
+```
+
+Set your working directory to the project folder.
+```{r}
+setwd("/home/smsta/Desktop/r_zendesk_tag_cloud")
 ```
 
 Activate 'renv' in the project:
@@ -36,6 +36,7 @@ library(renv)
 # Initialize renv in the project
 renv::init()
 ```
+
 
 Install packages in the project-specific environment:
 ```{r}
@@ -52,21 +53,32 @@ getwd()
 ```{r}
 #Make sure code returns a list of files. List all json files in newman folder, sorted in ascending order
 file_list <- list.files(path = "/home/smsta/Desktop/zendesk_tag_cloud/newman", pattern = "*.json")
-print(file_list)
+for (filename in file_list){
+  print(filename)
+}
 ```
 
 Install and load the jsonlite package:
 ```{r}
 renv::install("jsonlite")
-library(jsonlite)
 ```
 
+```{r}
+library(jsonlite)
 
+# Specify the path to your folder containing JSON files
+folder_path <- "/home/smsta/Desktop/zendesk_tag_cloud/newman"
 
+# Get a list of JSON files in the folder
+json_files <- list.files(path = folder_path, pattern = "\\.json$", full.names = TRUE)
 
-
-
-
-
-
+# Load json iteratively
+for (json_file in json_files) {
+  # Read and parse each JSON file
+  json_data <- fromJSON(json_file, flatten = TRUE)
+  
+  # Print or process the parsed data
+  print(json_data)
+}
+```
 
