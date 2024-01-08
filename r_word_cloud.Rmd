@@ -53,9 +53,7 @@ getwd()
 ```{r}
 #Make sure code returns a list of files. List all json files in newman folder, sorted in ascending order
 file_list <- list.files(path = "/home/smsta/Desktop/zendesk_tag_cloud/newman", pattern = "*.json")
-for (filename in file_list){
-  print(filename)
-}
+print(file_list)
 ```
 
 Install and load the jsonlite package:
@@ -63,22 +61,10 @@ Install and load the jsonlite package:
 renv::install("jsonlite")
 ```
 
+
 ```{r}
-library(jsonlite)
-
-# Specify the path to your folder containing JSON files
-folder_path <- "/home/smsta/Desktop/zendesk_tag_cloud/newman"
-
-# Get a list of JSON files in the folder
-json_files <- list.files(path = folder_path, pattern = "\\.json$", full.names = TRUE)
-
-# Load json iteratively
-for (json_file in json_files) {
-  # Read and parse each JSON file
-  json_data <- fromJSON(json_file, flatten = TRUE)
-  
-  # Print or process the parsed data
-  print(json_data)
-}
+# Read JSON file
+json_data <- fromJSON("newman-run-report-2020-06-25-06-42-13-124-0-ticketid-upto-3000.json")
+print_json_data
 ```
 
