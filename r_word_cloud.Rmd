@@ -61,10 +61,42 @@ Install and load the jsonlite package:
 renv::install("jsonlite")
 ```
 
-
+Parse json file:
 ```{r}
-# Read JSON file
-json_data <- fromJSON("newman-run-report-2020-06-25-06-42-13-124-0-ticketid-upto-3000.json")
-print_json_data
+library(jsonlite)
+
+file_path <- 'newman-run-report-2020-06-25-06-42-13-124-0-ticketid-upto-3000.json'
+json_data <- fromJSON(file_path, flatten = TRUE)
+
+generate_event_tuples <- function(json_data, prefix = NULL) {
+  events <- list()
+
+  if (is.list(json_data)) {
+    for (key in names(json_data)) {
+      current_path <- if (is.null(prefix)) key else paste0(prefix, ".", key)
+      value <- json_data[[key]]
+
+      if (is.list(value)) {
+        # Recursively call the function for nested objects
+        events <- c(events, generate_event_tuples(value, prefix = current_path))
+      } else {
+        # Add the current key, path, and value to the events list
+        events <- c(events, list(c(prefix = current_path, event = key, value = value)))
+      }
+    }
+  } else {
+    # Handling named vectors or atomic vectors
+    current_path <- if (is.null(prefix)) "root" else prefix
+    events <- list(c(prefix = current_path, event = "", value = json_data))
+  }
+
+  return(events)
+}
+
+result_events <- generate_event_tuples(json_data)
+
+for (event in result_events) {
+  cat(sprintf("prefix = %s, event = %s, value = %s\n", event[['prefix']], event[['event']], event[['value']]))
+}
 ```
 
