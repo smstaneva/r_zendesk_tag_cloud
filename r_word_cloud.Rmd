@@ -25,7 +25,7 @@ install.packages("renv")
 
 Set your working directory to the project folder.
 ```{r}
-setwd("/home/smsta/Desktop/r_zendesk_tag_cloud")
+setwd("/home/smsta/Desktop/zendesk_tag_cloud/newman")
 ```
 
 Activate 'renv' in the project:
@@ -97,6 +97,18 @@ result_events <- generate_event_tuples(json_data)
 
 for (event in result_events) {
   cat(sprintf("prefix = %s, event = %s, value = %s\n", event[['prefix']], event[['event']], event[['value']]))
+}
+```
+
+Parse json files in a folder:
+```{r}
+for (json_file in file_list) {
+  json_data <- fromJSON(json_file, flatten = TRUE)
+  result_events <- generate_event_tuples(json_data)
+  for (event in result_events) {
+    cat(sprintf("prefix = %s, event = %s, value = %s\n", event[['prefix']], event[['event']], event[['value']]))
+  }
+  rm(json_data)  # Free up memory
 }
 ```
 
