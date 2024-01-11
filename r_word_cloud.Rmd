@@ -61,6 +61,24 @@ Install and load the jsonlite package:
 renv::install("jsonlite")
 ```
 
+Set your working directory to the project folder.
+```{r}
+setwd("/home/smsta/Desktop/zendesk_tag_cloud/newman")
+```
+
+
+```{r}
+json_data <- fromJSON("newman-run-report-2020-06-25-06-42-13-124-0-ticketid-upto-3000.json")      # Display json file
+str(json_data) # Show where the content is
+```
+
+```{r}
+?fromJSON
+```
+
+
+
+
 Parse json file:
 ```{r}
 library(jsonlite)
@@ -102,13 +120,17 @@ for (event in result_events) {
 
 Parse json files in a folder:
 ```{r}
+
+library(jsonlite)
+
 for (json_file in file_list) {
   json_data <- fromJSON(json_file, flatten = TRUE)
-  result_events <- generate_event_tuples(json_data)
-  for (event in result_events) {
-    cat(sprintf("prefix = %s, event = %s, value = %s\n", event[['prefix']], event[['event']], event[['value']]))
+  for (event in json_data) {
+    cat(sprintf("prefix = %s, event = %s\n", event[['prefix']], event[['event']]))
   }
-  rm(json_data)  # Free up memory
+  rm(json_data) # Free up memory
 }
 ```
+
+
 
