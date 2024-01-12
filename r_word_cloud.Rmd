@@ -66,18 +66,14 @@ Set your working directory to the project folder.
 setwd("/home/smsta/Desktop/zendesk_tag_cloud/newman")
 ```
 
-
+#Explore json structure
 ```{r}
-json_data <- fromJSON("newman-run-report-2020-06-25-06-42-13-124-0-ticketid-upto-3000.json")      # Display json file
-str(json_data) # Show where the content is
+library(jsonlite)
+
+json_data <- fromJSON("newman-run-report-2020-06-25-06-42-13-124-0-ticketid-upto-3000.json", flatten=TRUE)
+class(json_data) #As output shows it is a list, use str() for more information
+str(json_data)
 ```
-
-```{r}
-?fromJSON
-```
-
-
-
 
 Parse json file:
 ```{r}
@@ -120,17 +116,20 @@ for (event in result_events) {
 
 Parse json files in a folder:
 ```{r}
-
 library(jsonlite)
 
 for (json_file in file_list) {
-  json_data <- fromJSON(json_file, flatten = TRUE)
+  json_data <- fromJSON(json_file)
+  
+  # Assuming json_data is a list of events
   for (event in json_data) {
-    cat(sprintf("prefix = %s, event = %s\n", event[['prefix']], event[['event']]))
+    cat(sprintf("prefix = %s, event = %s, value = %s\n", event$prefix, event$event, event$value))
   }
-  rm(json_data) # Free up memory
 }
 ```
+
+
+
 
 
 
