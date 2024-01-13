@@ -66,7 +66,7 @@ Set your working directory to the project folder.
 setwd("/home/smsta/Desktop/zendesk_tag_cloud/newman")
 ```
 
-#Explore json structure
+Explore json structure
 ```{r}
 library(jsonlite)
 
@@ -74,6 +74,26 @@ json_data <- fromJSON("newman-run-report-2020-06-25-06-42-13-124-0-ticketid-upto
 class(json_data) #As output shows it is a list, use str() for more information
 str(json_data)
 ```
+
+Read json objects
+```{r}
+library(jsonlite)
+
+# Specify the file path
+file_path <- "/home/smsta/Desktop/zendesk_tag_cloud/newman/newman-run-report-2020-06-25-06-42-13-124-0-ticketid-upto-3000.json"
+
+# Use fromJSON to read the JSON data from the file
+x <- fromJSON(file_path)
+
+# Print the first few elements of the resulting object
+head(x, 6)
+```
+
+
+```{r}
+?gsub
+```
+
 
 Parse json file:
 ```{r}
