@@ -89,11 +89,13 @@ x <- fromJSON(file_path)
 head(x, 6)
 ```
 
-
 ```{r}
-?gsub
+install.packages("listviewer")
 ```
 
+```{r}
+listviewer()
+```
 
 Parse json file:
 ```{r}
@@ -148,8 +150,72 @@ for (json_file in file_list) {
 }
 ```
 
+```{r}
+install.packages("tidyjson")
+```
 
+```{r}
+setwd("/home/smsta/Desktop")
+```
 
+Tidy the json data:
+```{r}
+library(dplyr)
+library(jsonlite)
+library(tidyjson)
 
+json_data <- fromJSON("test.json")
+json_data %>% spread_all
+ 
+```
 
+```{r}
+# Remove escaped newline '\\n' and non-breaking space 'nbsp' characters
+  m <- lapply(json_data, function(x) str_replace_all(x, '\\\\n|nbsp', ' '))
+  print(m)
+```
+
+```{r}
+library(jsonlite)
+library(stringr)
+
+# Define a function to process a ticket
+process_ticket <- function(ticket) {
+  # Extract the substring between two markers
+  l <- str_extract_all(ticket$plain_body, 'plain_body(.+?)public')
+  
+  # Remove escaped newline '\\n' and non-breaking space 'nbsp' characters
+  m <- lapply(l, function(x) str_replace_all(x, '\\\\n|nbsp', ' '))
+  
+  # Remove any URL within a string
+  p <- lapply(m, function(x) str_replace_all(x, 'http\\S+|www\\S+', ''))
+  
+  # Remove all of the punctuation in any item in the list
+  q <- lapply(p, function(x) str_replace_all(x, '[[:punct:]]', ''))
+  
+  # Join list elements without any separator
+  r <- sapply(q, function(x) paste(x, collapse = ' '))
+  
+  return(list(processed_ticket = r))
+}
+
+# Define a handler function for stream_in
+handler_function <- function(obj, ...) {
+  if (!is.null(obj$plain_body)) {
+    # Process the valid JSON object using your processing function
+    processed_ticket <- process_ticket(obj)
+    
+    # Print or use the processed ticket
+    print(processed_ticket)
+  } else {
+    # Handle invalid objects or skip them
+    cat("Invalid JSON object encountered. Skipping.\n")
+  }
+}
+
+# Read the JSON file with stream_in and the custom handler
+json_file <- "newman-run-report-2020-06-25-06-42-13-124-0-ticketid-upto-3000.json"  # Replace with your JSON file path
+stream_in(file(json_file), handler = handler_function)
+
+```
 
