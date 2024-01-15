@@ -37,12 +37,6 @@ library(renv)
 renv::init()
 ```
 
-
-Install packages in the project-specific environment:
-```{r}
-renv::install("ggplot2")
-```
-
 # <font color='#31708f'>Preprocessing</font>
 
 Display the path of current directory:
@@ -66,15 +60,6 @@ Set your working directory to the project folder.
 setwd("/home/smsta/Desktop/zendesk_tag_cloud/newman")
 ```
 
-Explore json structure
-```{r}
-library(jsonlite)
-
-json_data <- fromJSON("newman-run-report-2020-06-25-06-42-13-124-0-ticketid-upto-3000.json", flatten=TRUE)
-class(json_data) #As output shows it is a list, use str() for more information
-str(json_data)
-```
-
 Read json objects
 ```{r}
 library(jsonlite)
@@ -87,14 +72,6 @@ x <- fromJSON(file_path)
 
 # Print the first few elements of the resulting object
 head(x, 6)
-```
-
-```{r}
-install.packages("listviewer")
-```
-
-```{r}
-listviewer()
 ```
 
 Parse json file:
@@ -158,17 +135,6 @@ install.packages("tidyjson")
 setwd("/home/smsta/Desktop")
 ```
 
-Tidy the json data:
-```{r}
-library(dplyr)
-library(jsonlite)
-library(tidyjson)
-
-json_data <- fromJSON("test.json")
-json_data %>% spread_all
- 
-```
-
 ```{r}
 # Remove escaped newline '\\n' and non-breaking space 'nbsp' characters
   m <- lapply(json_data, function(x) str_replace_all(x, '\\\\n|nbsp', ' '))
@@ -176,46 +142,65 @@ json_data %>% spread_all
 ```
 
 ```{r}
+# Load the jsonlite package
 library(jsonlite)
-library(stringr)
 
-# Define a function to process a ticket
-process_ticket <- function(ticket) {
-  # Extract the substring between two markers
-  l <- str_extract_all(ticket$plain_body, 'plain_body(.+?)public')
-  
-  # Remove escaped newline '\\n' and non-breaking space 'nbsp' characters
-  m <- lapply(l, function(x) str_replace_all(x, '\\\\n|nbsp', ' '))
-  
-  # Remove any URL within a string
-  p <- lapply(m, function(x) str_replace_all(x, 'http\\S+|www\\S+', ''))
-  
-  # Remove all of the punctuation in any item in the list
-  q <- lapply(p, function(x) str_replace_all(x, '[[:punct:]]', ''))
-  
-  # Join list elements without any separator
-  r <- sapply(q, function(x) paste(x, collapse = ' '))
-  
-  return(list(processed_ticket = r))
+# Define a function for streaming JSON parsing
+parse_json <- function(json_filename) {
+  # Open a connection to the JSON file
+  con <- file(json_filename, "r", encoding = "UTF-8")
+
+  # Create a JSON streaming parser
+  parser <- stream_in(con)
+
+  # Iterate through the parsed JSON data
+  while (length(parser) > 0) {
+    # Process each JSON record
+    print(parser)
+
+    # Continue parsing the next JSON record
+    parser <- stream_in(con, parser)
+  }
+
+  # Close the file connection
+  close(con)
 }
 
-# Define a handler function for stream_in
-handler_function <- function(obj, ...) {
-  if (!is.null(obj$plain_body)) {
-    # Process the valid JSON object using your processing function
-    processed_ticket <- process_ticket(obj)
-    
-    # Print or use the processed ticket
-    print(processed_ticket)
-  } else {
-    # Handle invalid objects or skip them
-    cat("Invalid JSON object encountered. Skipping.\n")
+# Specify the JSON file to parse
+json_filename <- "newman-run-report-2020-06-25-06-42-13-124-0-ticketid-upto-3000.json"
+
+# Call the parse_json function
+parse_json(json_filename)
+
+```
+
+Show all keys in json file:
+```{r}
+# Load the jsonlite package
+library(jsonlite)
+
+# Function to recursively show all keys
+show_all_keys <- function(json_data, parent_key = NULL) {
+  if (is.list(json_data)) {
+    for (key in names(json_data)) {
+      nested_key <- ifelse(is.null(parent_key), key, paste(parent_key, key, sep = "."))
+      print(nested_key)
+      show_all_keys(json_data[[key]], nested_key)
+    }
   }
 }
 
-# Read the JSON file with stream_in and the custom handler
-json_file <- "newman-run-report-2020-06-25-06-42-13-124-0-ticketid-upto-3000.json"  # Replace with your JSON file path
-stream_in(file(json_file), handler = handler_function)
+# Specify the path to the JSON file
+json_file_path <- "/home/smsta/Desktop/zendesk_tag_cloud/newman/newman-run-report-2020-06-25-06-42-13-124-0-ticketid-upto-3000.json"
+
+# Read and parse the JSON file
+json_data <- fromJSON(json_file_path)
+
+# Show all keys
+print("All Keys:")
+show_all_keys(json_data)
 
 ```
+
+
 
