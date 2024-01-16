@@ -202,5 +202,9 @@ show_all_keys(json_data)
 
 ```
 
-
+Access data inside key "assertions":
+```{r}
+assertions_data <- json_data$run$executions$assertions
+assertions_data
+```
 
