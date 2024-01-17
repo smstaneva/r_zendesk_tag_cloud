@@ -208,3 +208,11 @@ assertions_data <- json_data$run$executions$assertions
 assertions_data
 ```
 
+
+Extract the substring between two markers:
+```{r}
+library(stringr)
+l <- str_match(assertions_data, "plain_body(.+?)public")
+l
+```
+
