@@ -213,6 +213,12 @@ Extract the substring between two markers:
 ```{r}
 library(stringr)
 l <- str_match(assertions_data, "plain_body(.+?)public")
-l
+l[1:6]
+```
+
+Remove escaped newline '\\n' and non-breaking space 'nbsp' characters:
+```{r}
+m <- gsub("\\\\n|nbsp|\\\\", " ", l, perl = TRUE)
+m[1:6]
 ```
 
