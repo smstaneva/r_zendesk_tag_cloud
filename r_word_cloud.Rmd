@@ -227,3 +227,31 @@ q <- gsub("[[:punct:]]", "", p , perl = TRUE)
 q[1:6]
 ```
 
+```{r}
+setwd("/home/smsta/Desktop/zendesk_tag_cloud/zendesk_txt")
+```
+
+
+```{r}
+install.packages("gtools")
+```
+
+```{r}
+library(gtools)
+```
+
+Control order of txt files:
+```{r}
+# Get a list of all text files in the "zendesk_txt" directory
+all_txt_files <- list.files(path = "/home/smsta/Desktop/zendesk_tag_cloud/zendesk_txt", full.names = FALSE)
+# Sort the list of file names based on numeric values
+all_txt_files_sorted <- all_txt_files[mixedorder(all_txt_files)]
+# Print the first 6 file names
+print(head(all_txt_files_sorted, n = 6))
+# Count the length of the list
+length_all_txt_files <- length(all_txt_files)
+print(length_all_txt_files)
+```
+
+
+
