@@ -240,18 +240,73 @@ install.packages("gtools")
 library(gtools)
 ```
 
-Control order of txt files:
+Order txt files by ticket number:
 ```{r}
 # Get a list of all text files in the "zendesk_txt" directory
-all_txt_files <- list.files(path = "/home/smsta/Desktop/zendesk_tag_cloud/zendesk_txt", full.names = FALSE)
-# Sort the list of file names based on numeric values
-all_txt_files_sorted <- all_txt_files[mixedorder(all_txt_files)]
+all_txt_files <- list.files(path = "/home/smsta/Desktop/zendesk_tag_cloud/zendesk_txt", full.names = TRUE)
+
 # Print the first 6 file names
-print(head(all_txt_files_sorted, n = 6))
+print(head(all_txt_files, n = 6))
+
 # Count the length of the list
 length_all_txt_files <- length(all_txt_files)
 print(length_all_txt_files)
+
+# Extract numbers from file names
+file_numbers <- as.numeric(gsub("[^0-9]", "", all_txt_files))
+file_numbers
+
+# Sort file names based on numbers
+sorted_file_names <- all_txt_files[order(file_numbers)]
+
+# Print sorted file names
+print(sorted_file_names)
+
 ```
+
+
+```{r}
+all_docs <- vector("list", length(all_txt_files))  # Preallocate all_docs list
+
+# Iterate over each text file
+for (i in seq_along(all_txt_files)) {
+  # Read the content of the text file
+  txt_file_as_string <- readLines(all_txt_files[i], encoding = "UTF-8")
+  # Store the content in the all_docs list
+  all_docs[[i]] <- txt_file_as_string
+}
+
+# Combine the first six documents into a single list
+first_six_docs <- lapply(all_docs[1:6], paste, collapse = "\n")
+
+# Print the first six documents
+print(first_six_docs)
+
+
+```
+
+```{r}
+install.packages("textTinyR")
+```
+
+```{r}
+library(textTinyR)
+
+# Define a function to tokenize sentences
+sent_to_words <- function(sentences) {
+  lapply(sentences, function(sentence) {
+    tokenize_words(sentence, lowercase = TRUE, remove_punct = TRUE)
+  })
+}
+
+# Tokenize sentences
+data_words <- sent_to_words(all_docs)
+
+# Print first two elements
+print(data_words[1:2])
+```
+
+
 
 ```{r}
 install.packages(c("tm", "wordcloud"))
