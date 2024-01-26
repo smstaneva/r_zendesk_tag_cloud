@@ -265,25 +265,6 @@ print(sorted_file_names)
 ```
 
 
-```{r}
-all_docs <- vector("list", length(all_txt_files))  # Preallocate all_docs list
-
-# Iterate over each text file
-for (i in seq_along(all_txt_files)) {
-  # Read the content of the text file
-  txt_file_as_string <- readLines(all_txt_files[i], encoding = "UTF-8")
-  # Store the content in the all_docs list
-  all_docs[[i]] <- txt_file_as_string
-}
-
-# Combine the first six documents into a single list
-first_six_docs <- lapply(all_docs[1:6], paste, collapse = "\n")
-
-# Print the first six documents
-print(first_six_docs)
-
-
-```
 
 ```{r}
 install.packages("textTinyR")
@@ -320,37 +301,29 @@ library(wordcloud)
 # Specify the path to the directory containing your text files
 directory_path <- "/home/smsta/Desktop/zendesk_tag_cloud/zendesk_txt"
 
-# Create an empty term-document matrix
-tdm <- NULL
-
-# Get a list of text files in the specified directory
-file_list <- list.files(directory_path, pattern = "\\.txt", full.names = TRUE)
-
 # Create a corpus for all documents
 corpus <- Corpus(DirSource(directory_path, encoding = "UTF-8"))
 
-# Preprocess the entire corpus
-corpus <- tm_map(corpus, content_transformer(tolower))
-corpus <- tm_map(corpus, removePunctuation)
-corpus <- tm_map(corpus, removeNumbers)
-corpus <- tm_map(corpus, removeWords, stopwords("english"))
+# Sample a subset of documents
+sample_corpus <- corpus[sample(length(corpus), 1000)]  # Adjust the number as needed
 
-# Create a sparse term-document matrix for the subset corpus
-tdm <- TermDocumentMatrix(corpus, control = list(sparse = TRUE))
+# Create a term-document matrix for the subset corpus
+tdm <- TermDocumentMatrix(sample_corpus, control = list(wordLengths = c(1, Inf)))
 
-# Convert the term-document matrix to a matrix
-matrix <- as.matrix(tdm)
+# Get the word frequencies directly from the TermDocumentMatrix
+word_freq <- rowSums(as.matrix(tdm))
 
-# Get the word frequencies
-word_freq <- colSums(matrix)
-
-# Create a data frame with words and frequencies
-word_df <- data.frame(word = names(word_freq), freq = word_freq)
-
-# Generate a word cloud
-wordcloud(words = word_df$word, freq = word_df$freq, min.freq = 1, scale = c(3, 0.5), colors = brewer.pal(8, "Dark2"))
+# Order the words by frequency and select the top 1000 words
+top_words <- head(sort(word_freq, decreasing = TRUE), 1000)
+top_words
 
 ```
 
+```{r}
+# Adjust plot margins
+par(mar = c(2, 2, 2, 2))  # Set smaller margins (bottom, left, top, right)
 
+# Generate a word cloud
+wordcloud(words = names(top_words), freq = top_words, min.freq = 1, colors = brewer.pal(8, "Dark2"))
+```
 
