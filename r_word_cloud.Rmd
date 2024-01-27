@@ -127,9 +127,6 @@ for (json_file in file_list) {
 }
 ```
 
-```{r}
-install.packages("tidyjson")
-```
 
 ```{r}
 setwd("/home/smsta/Desktop")
@@ -240,27 +237,35 @@ install.packages("gtools")
 library(gtools)
 ```
 
-Order txt files by ticket number:
+Control order of results:
 ```{r}
-# Get a list of all text files in the "zendesk_txt" directory
-all_txt_files <- list.files(path = "/home/smsta/Desktop/zendesk_tag_cloud/zendesk_txt", full.names = TRUE)
+# Set the directory path
+directory_path <- "/home/smsta/Desktop/zendesk_tag_cloud/zendesk_txt"
 
-# Print the first 6 file names
-print(head(all_txt_files, n = 6))
+# List all files in the directory
+all_txt_files <- list.files(path = directory_path, pattern = "\\.txt$", full.names = TRUE)
 
-# Count the length of the list
-length_all_txt_files <- length(all_txt_files)
-print(length_all_txt_files)
-
-# Extract numbers from file names
-file_numbers <- as.numeric(gsub("[^0-9]", "", all_txt_files))
-file_numbers
+# Sort the file names alphabetically
+all_txt_files <- sort(all_txt_files)
 
 # Sort file names based on numbers
 sorted_file_names <- all_txt_files[order(file_numbers)]
 
-# Print sorted file names
-print(sorted_file_names)
+# Print the first 6 file names
+print(sorted_file_names[1:6])
+
+# Count the number of files
+length(all_txt_files)
+
+```
+
+
+
+Install the necessary packages: 
+```{r}
+install.packages("tm")
+install.packages("wordcloud")
+install.packages("RColorBrewer")
 
 ```
 
@@ -272,22 +277,6 @@ install.packages("textTinyR")
 
 ```{r}
 library(textTinyR)
-
-# Define a function to tokenize sentences
-sent_to_words <- function(sentences) {
-  lapply(sentences, function(sentence) {
-    tokenize_words(sentence, lowercase = TRUE, remove_punct = TRUE)
-  })
-}
-
-# Tokenize sentences
-data_words <- sent_to_words(all_docs)
-
-# Print first two elements
-print(data_words[1:2])
-```
-
-
 
 ```{r}
 install.packages(c("tm", "wordcloud"))
@@ -325,5 +314,12 @@ par(mar = c(2, 2, 2, 2))  # Set smaller margins (bottom, left, top, right)
 
 # Generate a word cloud
 wordcloud(words = names(top_words), freq = top_words, min.freq = 1, colors = brewer.pal(8, "Dark2"))
+```
+
+```{r}
+set.seed(123) # for reproducibility
+wordcloud(words = rownames(word_freq), freq = word_freq$Freq, 
+          min.freq = 1, max.words = 100, random.order = FALSE, 
+          colors = brewer.pal(8, "Dark2"))
 ```
 
