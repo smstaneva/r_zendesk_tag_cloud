@@ -308,9 +308,10 @@ top_words
 
 ```
 
+Set figure size:
 ```{r}
 # Adjust plot margins
-par(mar = c(2, 2, 2, 2))  # Set smaller margins (bottom, left, top, right)
+par(mar = c(0.2, 0.2, 0.2, 0.2))  # Set smaller margins (bottom, left, top, right)
 
 # Generate a word cloud
 wordcloud(words = names(top_words), freq = top_words, min.freq = 1, colors = brewer.pal(8, "Dark2"))
@@ -318,8 +319,11 @@ wordcloud(words = names(top_words), freq = top_words, min.freq = 1, colors = bre
 
 ```{r}
 set.seed(123) # for reproducibility
-wordcloud(words = rownames(word_freq), freq = word_freq$Freq, 
-          min.freq = 1, max.words = 100, random.order = FALSE, 
+wordcloud(words = rownames(word_freq), 
+          freq = word_freq$Freq, 
+          min.freq = 1, 
+          max.words = 100, 
+          random.order = FALSE, 
           colors = brewer.pal(8, "Dark2"))
 ```
 
