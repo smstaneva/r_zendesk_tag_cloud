@@ -14,28 +14,40 @@ The preview shows you a rendered HTML copy of the contents of the editor. Conseq
 
 * [WordCloud](#third-bullet)
 
-* [CountVectorizer](#fourth-bullet)
-
-* [LDA Model](#fifth-bullet)
-
 Install package management system 'renv' to ensure packages are installed in the project-specific environment:
 ```{r}
 install.packages("renv")
 ```
 
+Remove package renv, if needed:
+```{r}
+remove.packages("renv")
+```
+
+Activate renv environment:
+```{r}
+renv::activate()
+```
+
+As a result two files appear in Files panel: 
+.Rprofile - run by Rstudio every time you load or reload a session
+renv - contains the following folders: 
+  .gitignore - is telling git to ignore the library and local folders, which are locations where your dependancies will be installed; these are very large folders and are very easily recreated by using other files; so no reason to upload them to the repository
+  activate.R - the core for inititializing the renv machinery
+  library - where your dependancies will be installed; if we click through 'library' we see we have renv as this is the only package we have installed; a library of dependancies specific to the project
+
+Deactivate renv environment, if needed:
+```{r}
+renv::deactivate(clean=TRUE)
+```
+
+
+#WORK IN PROGRESS
 Set your working directory to the project folder.
 ```{r}
-setwd("/home/smsta/Desktop/zendesk_tag_cloud/newman")
-```
-
-Activate 'renv' in the project:
-```{r}
-# Load the renv library
-library(renv)
-
-# Initialize renv in the project
-renv::init()
-```
+setwd("/home/smsta/Desktop/r_zendesk_tag_cloud")
+``` 
+  
 
 # <font color='#31708f'>Preprocessing</font>
 
@@ -326,4 +338,12 @@ wordcloud(words = rownames(word_freq),
           random.order = FALSE, 
           colors = brewer.pal(8, "Dark2"))
 ```
+
+
+
+
+  
+
+
+  
 
