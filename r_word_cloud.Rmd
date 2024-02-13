@@ -14,7 +14,8 @@ The preview shows you a rendered HTML copy of the contents of the editor. Conseq
 
 * [WordCloud](#third-bullet)
 
-Install package management system 'renv' to ensure packages are installed in the project-specific environment:
+#Create library of dependancies which is specific to the project and it is not going to affect any other projects or library that you might have on the computer
+Install package management system 'renv' to ensure packages are installed in the project-specific environment. Package will show in the Packages panel.
 ```{r}
 install.packages("renv")
 ```
@@ -29,7 +30,7 @@ Activate renv environment:
 renv::activate()
 ```
 
-As a result two files appear in Files panel: 
+As a result two files appear in Files panel in the repository: 
 .Rprofile - run by Rstudio every time you load or reload a session
 renv - contains the following folders: 
   .gitignore - is telling git to ignore the library and local folders, which are locations where your dependancies will be installed; these are very large folders and are very easily recreated by using other files; so no reason to upload them to the repository
@@ -41,6 +42,10 @@ Deactivate renv environment, if needed:
 renv::deactivate(clean=TRUE)
 ```
 
+Create a file to store information about the packages. The result is a renv.lock file that shows in the repository. Even if packages are installed, this file will store only those who were also loaded not just installed only.
+```{r}
+renv::snapshot()
+```
 
 #WORK IN PROGRESS
 Set your working directory to the project folder.
@@ -338,6 +343,7 @@ wordcloud(words = rownames(word_freq),
           random.order = FALSE, 
           colors = brewer.pal(8, "Dark2"))
 ```
+
 
 
 
